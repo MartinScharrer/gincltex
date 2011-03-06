@@ -169,21 +169,23 @@
 %    \end{macrocode}
 %
 % \subsection{Requirements}
-% The |graphics| or |graphicx| package is required but not loaded to allow
-% the user to decide which one should be used
+% The \pkg{graphics} package is required. The \pkg{graphicx} package is also supported and can
+% be loaded beforehand or afterwards.
+%
+% The \pkg{pgf} package is required for the "graphic" manipulations.
+% It actually loads \pkg{graphicx} internally.
 %    \begin{macrocode}
+\RequirePackage{graphics}
 \RequirePackage{pgf}
 %    \end{macrocode}
-
+%
 % \subsection{Graphics Rule Macros}
 % The following macro implement a \emph{graphics rule} for \LaTeX{} source code files.
 %
 % \begin{macro}{\Gin@rule@.tex}
 % This macro declares the graphics rule to the |graphics|/|x| package.
-% It is equivalent to |\DeclareGraphicsRule{.tex}{tex}{.tex}{}|, which is not
-% used here to not rely on the graphics packages at load time.
 %    \begin{macrocode}
-\@namedef{Gin@rule@.tex}#1{{tex}{.tex}{#1}}
+\DeclareGraphicsRule{.tex}{tex}{.tex}{}
 %    \end{macrocode}
 % \end{macro}
 %
