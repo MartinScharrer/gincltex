@@ -1,0 +1,26 @@
+%&pdflatex
+\documentclass{article}
+
+\usepackage{gincltex}
+\usepackage{filecontents}
+
+\begin{filecontents}{\jobname-sub.tex}
+\fbox{%
+\setlength{\unitlength}{1cm}
+\begin{picture}(5,5)(0,0)
+    \put(0,0){\line(1,2){3}}
+\end{picture}%
+}%
+\end{filecontents}
+
+\begin{document}
+
+Before\includegraphics[width=.5\textwidth]{\jobname-sub.tex}After
+
+Before\includegraphics[width=.5\textwidth,angle=45]{\jobname-sub.tex}After
+
+\fboxsep=0pt
+\fbox{\includegraphics[width=.5\textwidth]{\jobname-sub.tex}}
+
+\end{document}
+
