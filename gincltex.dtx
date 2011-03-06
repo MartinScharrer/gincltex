@@ -96,7 +96,8 @@
 % This small package builds on the standard \LaTeX{} packages \pkg{graphic} and/or \pkg{graphicx}
 % and allows external \LaTeX{} source files to be included like graphic files, i.e. adds support for the `|.tex|'
 % extension.
-% Some of the lower level operations like clipping and trimming are implemented using the \pkg{pgf} package.
+% Some of the lower level operations like clipping and trimming are implemented using the \pkg{pgf} package which supports
+% both DVI/PS and PDF output.
 % This package uses a very similar technique than the author's other package \pkg{adjustbox}, but provides a different
 % interface.
 % \\[\medskipamount]
@@ -111,13 +112,17 @@
 %   |\includegraphics[<options>]{somefile.tex}|
 % \end{quote}
 %
-% Usually such \LaTeX{} files hold a picture environment like
+% A \LaTeX{} file included this way should result in an identical display as a tightly cropped EPS or PDF image
+% of the same file (apart smaller rounding differences).
+% Usually such files hold a picture environment like
 % |picture|, |pspicture|, |pgfpicture| or |tikzpicture|, which may take advantage
 % from the |standalone| class.
+% In fact \pkg{gincltex} is used in newer versions of \pkg{standalone} to seamlessly switch between source and image files.
 %
 % All options of |\includegraphics| described in the manual of |graphic|/|graphicx| (the |grfguide|)
 % should be supported. Therefore it is possible to resize, rotate and clip the content
 % of the \LaTeX{} source file in the same way as for images.
+%
 %
 % An alternative is the \pkg{adjustbox} package from the same author which allows the same options
 % as for |\includegraphics| for arbitrary TeX material:
