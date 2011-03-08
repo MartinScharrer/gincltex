@@ -203,9 +203,14 @@
 % Macro to input the \LaTeX{} source file.
 % Because |\includegraphics| can be used inside this file certain internal |graphics| macros
 % must be reset to there default value.
+% The argument is expanded first because it can include |\Gin@ext|.
 %    \begin{macrocode}
 \def\gincltex@input#1{%
-    {\let\Gin@ext\relax\input{#1}}%
+    \begingroup
+    \edef\@tempa{{#1}}%
+    \let\Gin@ext\relax
+    \expandafter\input\@tempa
+    \endgroup
 }
 %    \end{macrocode}
 % \end{macro}
