@@ -31,10 +31,8 @@
 %</driver>
   [2011/03/06 v0.1 Include external LaTeX files like graphics]
 %<*driver>
-\documentclass{ltxdoc}
+\documentclass{ydoc}[2011/03/17]
 \usepackage{gincltex}
-\usepackage{hyperref}
-\let\pkg\texttt
 \EnableCrossrefs
 %\CodelineIndex
 \RecordChanges
@@ -47,7 +45,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{233}
+% \CheckSum{239}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -95,7 +93,7 @@
 %
 % \begin{abstract}
 % This small package builds on the standard \LaTeX{} packages \pkg{graphic} and/or \pkg{graphicx}
-% and allows external \LaTeX{} source files to be included like graphic files, i.e. adds support for the `|.tex|'
+% and allows external \LaTeX{} source files to be included like graphic files, i.e. adds support for the ".tex"
 % extension.
 % Some of the lower level operations like clipping and trimming are implemented using the \pkg{pgf} package which supports
 % both DVI/PS and PDF output.
@@ -109,30 +107,32 @@
 % \section{Introduction}
 % This small package builds on the standard \LaTeX{} packages |graphic| and |graphicx|
 % and allows external \LaTeX{} source files to be included like graphic files:
-% \begin{quote}
-%   |\includegraphics[<options>]{somefile.tex}|
-% \end{quote}
+% \typeout{DEBUGGGGGG:!!}
+% \begin{macroquote}
+%   \includegraphics[<options>]{<\/file>'.tex'}
+% \end{macroquote}
 %
+% \noindent
 % A \LaTeX{} file included this way should result in an identical display as a tightly cropped EPS or PDF image
 % of the same file (apart smaller rounding differences).
 % Usually such files hold a picture environment like
-% |picture|, |pspicture|, |pgfpicture| or |tikzpicture|, which may take advantage
-% from the |standalone| class.
+% \env{picture}, \env{pspicture}, \env{pgfpicture} or \env{tikzpicture}, which may take advantage
+% from the \cls{standalone} class.
 % In fact \pkg{gincltex} is used in newer versions of \pkg{standalone} to seamlessly switch between source and image files.
 %
-% All options of |\includegraphics| described in the manual of |graphic|/|graphicx| (the |grfguide|)
+% All options of \Macro\includegraphics described in the manual of \pkg{graphic}/\pkg{graphicx} (the \texttt{grfguide})
 % should be supported. Therefore it is possible to resize, rotate and clip the content
 % of the \LaTeX{} source file in the same way as for images.
 %
 %
 % An alternative is the \pkg{adjustbox} package from the same author which allows the same options
-% as for |\includegraphics| for arbitrary TeX material:
-% \begin{quote}
-%   |\adjustbox{<includegraphics options>}{\input{somefile}}|
-% \end{quote}
+% as for \Macro\includegraphics for arbitrary TeX material:
+% \begin{macroquote}
+%  \adjustbox{<includegraphics options>}{'\input{'<\/file>'}'}
+% \end{macroquote}
 %
 % \section{Usage}
-% After loading the package the |.tex| extension is supported by |\includegraphics|
+% After loading the package the |.tex| extension is supported by \Macro\includegraphics
 % and the macro can be used in its normal form for \LaTeX{} files.
 % The content of the file is typeset first inside an |\hbox| (the primitive version of |\mbox|)
 % and then modified according to the given macro options.
@@ -140,17 +140,17 @@
 % This package doe
 %
 % \subsection{Draft support}
-% The package supports the |draft| option of |graphics| which only displays an empty box
+% The package supports the \opt*{draft} option of \pkg{graphics} which only displays an empty box
 % with the file name for all included graphics.
 % In this mode the source file should not be processed to reduce compile time.
 % However the size of the resulting box from the source file must be know in order
 % to reserve the required space. Therefore the \emph{bounding box} information is
-% cached for future runs with active |draft| option. The location where the information
-% is cached can be controlled with the |bb| option.
+% cached for future runs with active \opt{draft} option. The location where the information
+% is cached can be controlled with the \opt{bb} option.
 %
 % \subsection{Package options}
 % The place where the bounding box information is cached can be adjusted with the 
-% |bb| option. By default |bb=aux| is active which stores the bounding box information
+% \opt*{bb} option. By default |bb=aux| is active which stores the bounding box information
 % in the |.aux| file. With |bb=file| this information is written in EPS format into
 % |.tex.bb| files, e.g. for each source file |name.tex| a file |name.tex.bb| is created.
 %
