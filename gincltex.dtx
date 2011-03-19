@@ -45,7 +45,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{239}
+% \CheckSum{251}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -149,6 +149,7 @@
 % is cached can be controlled with the \opt{bb} option.
 %
 % \subsection{Package options}
+% The \opt*{draft} and \opt*{final} options are directly passed to the 
 % The place where the bounding box information is cached can be adjusted with the 
 % \opt*{bb} option. By default |bb=aux| is active which stores the bounding box information
 % in the |.aux| file. With |bb=file| this information is written in EPS format into
@@ -164,11 +165,14 @@
 % At the moment the key=value format is simply hard coded.
 %    \begin{macrocode}
 \newif\if@gincltex@bbfile
-\newif\if@gincltex@draft
 \DeclareOption{bb=file}{\@gincltex@bbfiletrue}
 \DeclareOption{bb=aux}{\@gincltex@bbfilefalse}
-\DeclareOption{draft}{\@gincltex@drafttrue}
-\DeclareOption{final}{\@gincltex@draftfalse}
+\DeclareOption{draft}{\PassOptionsToPackage{draft}{graphics}}
+\DeclareOption{draft=true}{\PassOptionsToPackage{draft}{graphics}}
+\DeclareOption{draft=false}{\PassOptionsToPackage{final}{graphics}}
+\DeclareOption{final}{\PassOptionsToPackage{final}{graphics}}
+\DeclareOption{final=true}{\PassOptionsToPackage{final}{graphics}}
+\DeclareOption{final=false}{\PassOptionsToPackage{draft}{graphics}}
 \ProcessOptions*\relax
 %    \end{macrocode}
 %
@@ -356,12 +360,12 @@
 % \begin{macro}{\Gread@tex}
 % Read the bounding box information. The only way to do this is to actually typeset the source file into a box.
 % The box is then reused in the |\Ginclude@tex| macro, so there is no overhead.
-% The bounding box information is written into the |.aux| file to avoid processing the source file in |draft| mode.
-% However if the corresponding macro is not define yet (e.g.\ |draft| run without |.aux| file) the file must be
+% The bounding box information is written into the |.aux| file to avoid processing the source file in \opt{draft} mode.
+% However if the corresponding macro is not define yet (e.g.\ \opt{draft} run without ".aux" file) the file must be
 % read anyway.
 %    \begin{macrocode}
 \def\Gread@tex#1{%
-    \ifcase0\if@gincltex@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
+    \ifcase0\ifGin@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
         \sbox\gincltex@box{{\gincltex@input{#1}}}%
         \def\Gin@llx{0}%
         \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
