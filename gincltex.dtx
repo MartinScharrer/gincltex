@@ -66,6 +66,7 @@
 %
 % \changes{v0.1}{2011/01/23}{Packaged code}
 % \changes{v0.1}{2011/03/06}{First release}
+% \changes{v0.2}{2011/03/18}{Added explicit 'draft' and 'final' options.}
 %
 % \GetFileInfo{\jobname.dtx}
 %
@@ -92,7 +93,7 @@
 % \vspace{1.2em}%
 %
 % \begin{abstract}
-% This small package builds on the standard \LaTeX{} packages \pkg{graphic} and/or \pkg{graphicx}
+% This small package builds on the standard \LaTeX{} package \pkg{graphicx}
 % and allows external \LaTeX{} source files to be included like graphic files, i.e. adds support for the ".tex"
 % extension.
 % Some of the lower level operations like clipping and trimming are implemented using the \pkg{pgf} package which supports
@@ -105,7 +106,7 @@
 % \end{abstract}
 %
 % \section{Introduction}
-% This small package builds on the standard \LaTeX{} packages \pkg{graphic} and \pkg{graphicx}
+% This small package builds on the standard \LaTeX{} package \pkg{graphicx}
 % and allows external \LaTeX{} source files to be included like graphic files:
 %
 % \begin{macroquote}
@@ -120,7 +121,7 @@
 % from the \cls{standalone} class.
 % In fact \pkg{gincltex} is used in newer versions of \pkg{standalone} to seamlessly switch between source and image files.
 %
-% All options of \Macro\includegraphics described in the manual of \pkg{graphic}/\pkg{graphicx} (the \texttt{grfguide})
+% All options of \Macro\includegraphics described in the manual of \pkg{graphicx} (the \texttt{grfguide})
 % should be supported. Therefore it is possible to resize, rotate and clip the content
 % of the \LaTeX{} source file in the same way as for images.
 %
@@ -136,11 +137,10 @@
 % and the macro can be used in its normal form for \LaTeX{} files.
 % The content of the file is typeset first inside an |\hbox| (the primitive version of |\mbox|)
 % and then modified according to the given macro options.
-% Either the \pkg{graphic} or \pkg{graphicx} package must also be loaded by the user.
-% This package doe
+% The \pkg{graphicx} package is automatically loaded.
 %
 % \subsection{Draft support}
-% The package supports the \opt{draft} option of \pkg{graphics} which only displays an empty box
+% The package supports the \opt{draft} option of \pkg{graphicx} which only displays an empty box
 % with the file name for all included graphics.
 % In this mode the source file should not be processed to reduce compile time.
 % However the size of the resulting box from the source file must be know in order
@@ -149,9 +149,8 @@
 % is cached can be controlled with the \opt{bb} option.
 %
 % \subsection{Package options}
-% The \opt*{draft} and \opt*{final} options are directly passed to the loaded \pkg{graphics} package and
-% will stay valid if \pkg{graphicx} is loaded afterwards. Having a different draft setting
-% is not supported and the one used by the \pkg{graphics} package will always take affect for \pkg{gincltex}.
+% The \opt*{draft} and \opt*{final} options are directly passed to the loaded \pkg{graphicx} package.
+% Having a different draft setting is not supported and the one used by the \pkg{graphicx} package will always take affect for \pkg{gincltex}.
 %
 % The place where the bounding box information is cached can be adjusted with the 
 % \opt*{bb} option. By default |bb=aux| is active which stores the bounding box information
@@ -170,23 +169,20 @@
 \newif\if@gincltex@bbfile
 \DeclareOption{bb=file}{\@gincltex@bbfiletrue}
 \DeclareOption{bb=aux}{\@gincltex@bbfilefalse}
-\DeclareOption{draft}{\PassOptionsToPackage{draft}{graphics}}
-\DeclareOption{draft=true}{\PassOptionsToPackage{draft}{graphics}}
-\DeclareOption{draft=false}{\PassOptionsToPackage{final}{graphics}}
-\DeclareOption{final}{\PassOptionsToPackage{final}{graphics}}
-\DeclareOption{final=true}{\PassOptionsToPackage{final}{graphics}}
-\DeclareOption{final=false}{\PassOptionsToPackage{draft}{graphics}}
+\DeclareOption{draft}{\PassOptionsToPackage{draft}{graphicx}}
+\DeclareOption{draft=true}{\PassOptionsToPackage{draft}{graphix}}
+\DeclareOption{draft=false}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final=true}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final=false}{\PassOptionsToPackage{draft}{graphicx}}
 \ProcessOptions*\relax
 %    \end{macrocode}
 %
 % \subsection{Requirements}
-% The \pkg{graphics} package is required. The \pkg{graphicx} package is also supported and can
-% be loaded beforehand or afterwards.
-%
+% The \pkg{graphicx} package is required.
 % The \pkg{pgf} package is required for the graphic manipulations.
-% It actually loads \pkg{graphicx} internally.
 %    \begin{macrocode}
-\RequirePackage{graphics}
+\RequirePackage{graphicx}
 \RequirePackage{pgf}
 %    \end{macrocode}
 %
@@ -194,7 +190,7 @@
 % The following macro implement a \emph{graphics rule} for \LaTeX{} source code files.
 %
 % \begin{macro}{\Gin@rule@.tex}
-% This macro declares the graphics rule to the |graphics|/|x| package.
+% This macro declares the graphics rule to the \pkg{graphicx} package.
 %    \begin{macrocode}
 \DeclareGraphicsRule{.tex}{tex}{.tex}{}
 %    \end{macrocode}
@@ -211,7 +207,7 @@
 %
 % \begin{macro}{\gincltex@input}
 % Macro to input the \LaTeX{} source file.
-% Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphics} macros
+% Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphicx} macros
 % must be reset to there default value.
 % The argument is expanded first because it can include |\Gin@ext|.
 %    \begin{macrocode}
@@ -228,7 +224,7 @@
 % \begin{macro}{\Ginclude@tex}
 % This driver macro is called from the standard \Macro\includegraphics macro to include the \LaTeX{} source file.
 % Some \Macro\includegraphics options like |angle| are handled by wrapping this macro in the appropriate
-% \pkg{graphics} macro like \Macro\rotatebox, but others must be handled here.
+% \pkg{graphicx} macro like \Macro\rotatebox, but others must be handled here.
 %    \begin{macrocode}
 \def\Ginclude@tex#1{%
     \begingroup
@@ -278,7 +274,7 @@
 % \end{macro}
 %
 % The |\Gread@tex| macro is defined in two different ways depending how the bounding box information is preserved.
-% This information is required to support the \opt{draft} option of the \pkg{graphics} package.
+% This information is required to support the \opt{draft} option of the \pkg{graphicx} package.
 %    \begin{macrocode}
 \if@gincltex@bbfile
 %    \end{macrocode}
