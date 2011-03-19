@@ -105,7 +105,7 @@
 % \end{abstract}
 %
 % \section{Introduction}
-% This small package builds on the standard \LaTeX{} packages |graphic| and |graphicx|
+% This small package builds on the standard \LaTeX{} packages \pkg{graphic} and \pkg{graphicx}
 % and allows external \LaTeX{} source files to be included like graphic files:
 %
 % \begin{macroquote}
@@ -132,7 +132,7 @@
 % \end{macroquote}
 %
 % \section{Usage}
-% After loading the package the |.tex| extension is supported by \Macro\includegraphics
+% After loading the package the ".tex" extension is supported by \Macro\includegraphics
 % and the macro can be used in its normal form for \LaTeX{} files.
 % The content of the file is typeset first inside an |\hbox| (the primitive version of |\mbox|)
 % and then modified according to the given macro options.
@@ -156,7 +156,7 @@
 % The place where the bounding box information is cached can be adjusted with the 
 % \opt*{bb} option. By default |bb=aux| is active which stores the bounding box information
 % in the |.aux| file. With |bb=file| this information is written in EPS format into
-% |.tex.bb| files, e.g. for each source file |name.tex| a file |name.tex.bb| is created.
+% |.tex.bb| files, e.g. for each source file "name.tex" a file "name.tex.bb" is created.
 %
 %
 % \StopEventually{}
@@ -183,7 +183,7 @@
 % The \pkg{graphics} package is required. The \pkg{graphicx} package is also supported and can
 % be loaded beforehand or afterwards.
 %
-% The \pkg{pgf} package is required for the "graphic" manipulations.
+% The \pkg{pgf} package is required for the graphic manipulations.
 % It actually loads \pkg{graphicx} internally.
 %    \begin{macrocode}
 \RequirePackage{graphics}
@@ -211,7 +211,7 @@
 %
 % \begin{macro}{\gincltex@input}
 % Macro to input the \LaTeX{} source file.
-% Because |\includegraphics| can be used inside this file certain internal |graphics| macros
+% Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphics} macros
 % must be reset to there default value.
 % The argument is expanded first because it can include |\Gin@ext|.
 %    \begin{macrocode}
@@ -226,9 +226,9 @@
 % \end{macro}
 %
 % \begin{macro}{\Ginclude@tex}
-% This driver macro is called from the standard |\includegraphics| macro to include the \LaTeX{} source file.
-% Some |\includegraphics| options like |angle| are handled by wrapping this macro in the appropriate
-% |graphics| macro like |\rotatebox|, but others must be handled here.
+% This driver macro is called from the standard \Macro\includegraphics macro to include the \LaTeX{} source file.
+% Some \Macro\includegraphics options like |angle| are handled by wrapping this macro in the appropriate
+% \pkg{graphics} macro like \Macro\rotatebox, but others must be handled here.
 %    \begin{macrocode}
 \def\Ginclude@tex#1{%
     \begingroup
@@ -250,13 +250,13 @@
     \Gin@defaultbp\Gin@ury{\ht\gincltex@box}%
 %    \end{macrocode}
 % The |height|, |totalheight| and |width| options are already processed and the final requested height and width
-% to which the `graphic' should be scaled to are provided. The internal form of the |\resizebox| macro is used for
+% to which the `graphic' should be scaled to are provided. The internal form of the \Macro\resizebox macro is used for
 % this.
 %    \begin{macrocode}
     \Gscale@@box\totalheight{\Gin@req@width}{\Gin@req@height}{%
 %    \end{macrocode}
-% The trimming and clipping operations (|trim|, |viewport| and |clip| options) are handled using a |pgfpicture| from
-% the |pgf| package, because it supports both DVI and PDF output.
+% The trimming and clipping operations (|trim|, |viewport| and |clip| options) are handled using a \env{pgfpicture} from
+% the \pkg{pgf} package, because it supports both DVI and PDF output.
 %    \begin{macrocode}
     \begin{pgfpicture}%
         \pgfkeys{/pgf/.cd,inner sep=0pt,outer sep=0pt}%
@@ -278,7 +278,7 @@
 % \end{macro}
 %
 % The |\Gread@tex| macro is defined in two different ways depending how the bounding box information is preserved.
-% This information is required to support the |draft| option of the |graphics| package.
+% This information is required to support the \opt{draft} option of the \pkg{graphics} package.
 %    \begin{macrocode}
 \if@gincltex@bbfile
 %    \end{macrocode}
@@ -364,7 +364,7 @@
 % Read the bounding box information. The only way to do this is to actually typeset the source file into a box.
 % The box is then reused in the |\Ginclude@tex| macro, so there is no overhead.
 % The bounding box information is written into the |.aux| file to avoid processing the source file in \opt{draft} mode.
-% However if the corresponding macro is not define yet (e.g.\ \opt{draft} run without ".aux" file) the file must be
+% However if the corresponding macro is not define yet (e.g.\ \opt{draft} run without |.aux| file) the file must be
 % read anyway.
 %    \begin{macrocode}
 \def\Gread@tex#1{%
