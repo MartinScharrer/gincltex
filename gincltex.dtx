@@ -149,7 +149,10 @@
 % is cached can be controlled with the \opt{bb} option.
 %
 % \subsection{Package options}
-% The \opt*{draft} and \opt*{final} options are directly passed to the 
+% The \opt*{draft} and \opt*{final} options are directly passed to the loaded \pkg{graphics} package and
+% will stay valid if \pkg{graphicx} is loaded afterwards. Having a different draft setting
+% is not supported and the one used by the \pkg{graphics} package will always take affect for \pkg{gincltex}.
+%
 % The place where the bounding box information is cached can be adjusted with the 
 % \opt*{bb} option. By default |bb=aux| is active which stores the bounding box information
 % in the |.aux| file. With |bb=file| this information is written in EPS format into
