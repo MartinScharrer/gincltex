@@ -29,7 +29,7 @@
 %<*driver>
 \ProvidesFile{gincltex.dtx}
 %</driver>
-  [2011/03/06 v0.1 Include external LaTeX files like graphics]
+  [2011/03/18 v0.2 Include external LaTeX files like graphics]
 %<*driver>
 \documentclass{ydoc}[2011/03/17]
 \usepackage{gincltex}
@@ -107,7 +107,7 @@
 % \section{Introduction}
 % This small package builds on the standard \LaTeX{} packages |graphic| and |graphicx|
 % and allows external \LaTeX{} source files to be included like graphic files:
-% \typeout{DEBUGGGGGG:!!}
+%
 % \begin{macroquote}
 %   \includegraphics[<options>]{<\/file>'.tex'}
 % \end{macroquote}
@@ -164,8 +164,11 @@
 % At the moment the key=value format is simply hard coded.
 %    \begin{macrocode}
 \newif\if@gincltex@bbfile
+\newif\if@gincltex@draft
 \DeclareOption{bb=file}{\@gincltex@bbfiletrue}
 \DeclareOption{bb=aux}{\@gincltex@bbfilefalse}
+\DeclareOption{draft}{\@gincltex@drafttrue}
+\DeclareOption{final}{\@gincltex@draftfalse}
 \ProcessOptions*\relax
 %    \end{macrocode}
 %
@@ -358,7 +361,7 @@
 % read anyway.
 %    \begin{macrocode}
 \def\Gread@tex#1{%
-    \ifcase0\ifGin@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
+    \ifcase0\if@gincltex@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
         \sbox\gincltex@box{{\gincltex@input{#1}}}%
         \def\Gin@llx{0}%
         \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
