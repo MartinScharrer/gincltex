@@ -29,7 +29,7 @@
 %<*driver>
 \ProvidesFile{gincltex.dtx}
 %</driver>
-  [2011/03/18 v0.2 Include external LaTeX files like graphics]
+  [2011/09/04 v0.3 Include external LaTeX files like graphics]
 %<*driver>
 \documentclass{ydoc}[2011/03/17]
 \usepackage{gincltex}
@@ -45,7 +45,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{251}
+% \CheckSum{161}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -67,6 +67,7 @@
 % \changes{v0.1}{2011/01/23}{Packaged code}
 % \changes{v0.1}{2011/03/06}{First release}
 % \changes{v0.2}{2011/03/18}{Added explicit 'draft' and 'final' options.}
+% \changes{v0.3}{2011/09/04}{Clipping and trimming are now done using the \pkg{adjustbox} package.}
 %
 % \GetFileInfo{\jobname.dtx}
 %
@@ -194,10 +195,10 @@
 % Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphicx} macros
 % must be reset to there default value.
 % The argument is expanded first because it could include |\Gin@ext|.
+% The content is stored with zero depth to achieve the same result as with included graphics.
 %    \begin{macrocode}
 \def\gincltex@boxfile#1{%
-    \sbox\gincltex@box{%
-        \begingroup
+    \sbox\gincltex@box{{%
         \hbox{\vbox{%
             \hbox{%
                 \edef\@tempa{{#1}}%
@@ -206,8 +207,7 @@
             }%
             \vskip\z@
         }}%
-        \endgroup
-    }%
+    }}%
 }
 %    \end{macrocode}
 % \end{macro}
