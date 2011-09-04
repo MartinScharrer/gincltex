@@ -189,18 +189,25 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\gincltex@input}
-% Macro to input the \LaTeX{} source file.
+% \begin{macro}{\gincltex@boxfile}
+% Macro to box the \LaTeX{} source file.
 % Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphicx} macros
 % must be reset to there default value.
-% The argument is expanded first because it can include |\Gin@ext|.
+% The argument is expanded first because it could include |\Gin@ext|.
 %    \begin{macrocode}
-\def\gincltex@input#1{%
-    \begingroup
-    \edef\@tempa{{#1}}%
-    \let\Gin@ext\relax
-    \expandafter\input\@tempa
-    \endgroup
+\def\gincltex@boxfile#1{%
+    \sbox\gincltex@box{%
+        \begingroup
+        \hbox{\vbox{%
+            \hbox{%
+                \edef\@tempa{{#1}}%
+                \let\Gin@ext\relax
+                \expandafter\input\@tempa
+            }%
+            \vskip\z@
+        }}%
+        \endgroup
+    }%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -217,8 +224,7 @@
 % If not it is saved here.
 %    \begin{macrocode}
     \ifvoid\gincltex@box
-        \sbox\gincltex@box{{\gincltex@input{#1}}}%
-        \sbox\gincltex@box{\raise\dp\gincltex@box\box\gincltex@box}%
+        \gincltex@boxfile{#1}%
     \fi
 %    \end{macrocode}
 % The |height|, |totalheight| and |width| options are already processed and the final requested height and width
@@ -294,10 +300,9 @@
 %    \begin{macrocode}
 \def\Gread@tex#1{%
     \ifcase0\ifGin@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
-        \sbox\gincltex@box{{\gincltex@input{#1}}}%
-        \sbox\gincltex@box{\raise\dp\gincltex@box\box\gincltex@box}%
+        \gincltex@boxfile{#1}%
         \def\Gin@llx{0}%
-        \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
+        \let\Gin@llx\Gin@lly
         \Gin@defaultbp\Gin@urx{\wd\gincltex@box}%
         \Gin@defaultbp\Gin@ury{\ht\gincltex@box}%
         \expandafter\xdef\csname gincltex@bb@#1\endcsname
