@@ -159,6 +159,7 @@
 \DeclareOption{final}{\PassOptionsToPackage{final}{graphicx}}
 \DeclareOption{final=true}{\PassOptionsToPackage{final}{graphicx}}
 \DeclareOption{final=false}{\PassOptionsToPackage{draft}{graphicx}}
+\DeclareOption*{\PassOptionsToPackage\CurrentOption{adjustbox}}
 \ProcessOptions*\relax
 %    \end{macrocode}
 %
@@ -166,8 +167,7 @@
 % The \pkg{graphicx} package is required.
 % The \pkg{pgf} package is required for the graphic manipulations.
 %    \begin{macrocode}
-\RequirePackage{graphicx}
-\RequirePackage{pgf}
+\RequirePackage{adjustbox}
 %    \end{macrocode}
 %
 % \subsection{Graphics Rule Macros}
@@ -218,30 +218,15 @@
 %    \begin{macrocode}
     \ifvoid\gincltex@box
         \sbox\gincltex@box{{\gincltex@input{#1}}}%
+        \sbox\gincltex@box{\raise\dp\gincltex@box\box\gincltex@box}%
     \fi
 %    \end{macrocode}
 % The |height|, |totalheight| and |width| options are already processed and the final requested height and width
 % to which the `graphic' should be scaled to are provided. The internal form of the \Macro\resizebox macro is used for
 % this.
 %    \begin{macrocode}
-    \Gscale@@box\totalheight{\Gin@req@width}{\Gin@req@height}{%
-%    \end{macrocode}
-% The trimming and clipping operations (|trim|, |viewport| and |clip| options) are handled using a \env{pgfpicture} from
-% the \pkg{pgf} package, because it supports both DVI and PDF output.
-%    \begin{macrocode}
-    \begin{pgfpicture}%
-        \pgfkeys{/pgf/.cd,inner sep=0pt,outer sep=0pt}%
-        \pgfpathmoveto{\pgfqpoint{\Gin@llx bp}{\Gin@lly bp}}%
-        \pgfpathlineto{\pgfqpoint{\Gin@urx bp}{\Gin@lly bp}}%
-        \pgfpathlineto{\pgfqpoint{\Gin@urx bp}{\Gin@ury bp}}%
-        \pgfpathlineto{\pgfqpoint{\Gin@llx bp}{\Gin@ury bp}}%
-        \pgfpathclose
-        \expandafter
-        \pgfusepath\ifGin@clip{clip}\else{use as bounding box}\fi
-        \pgfnode{rectangle}{base west}{\usebox\gincltex@box}{}{}%
-    \end{pgfpicture}%
-%    \end{macrocode}
-%    \begin{macrocode}
+    \resizebox*{\Gin@req@width}{\Gin@req@height}{%
+        \ifGin@clip\expandafter\clipbox\else\expandafter\clipbox\fi*{{\Gin@llx} {\Gin@lly} {\Gin@urx} {\Gin@ury}}{\usebox\gincltex@box}%
     }%
     \endgroup
 }
@@ -310,6 +295,7 @@
 \def\Gread@tex#1{%
     \ifcase0\ifGin@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
         \sbox\gincltex@box{{\gincltex@input{#1}}}%
+        \sbox\gincltex@box{\raise\dp\gincltex@box\box\gincltex@box}%
         \def\Gin@llx{0}%
         \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
         \Gin@defaultbp\Gin@urx{\wd\gincltex@box}%
