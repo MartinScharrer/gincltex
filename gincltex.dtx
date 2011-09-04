@@ -220,15 +220,6 @@
         \sbox\gincltex@box{{\gincltex@input{#1}}}%
     \fi
 %    \end{macrocode}
-% The bounding box points (lower left, upper right) are calculated. It is assumed that the `graphic' baseline starts at the
-% lower left point, so |llx=0|. The depth should be |0| as well but to be on the save side it is calculated here.
-% The upper right point is given by the box width and height.
-%    \begin{macrocode}
-    \def\Gin@llx{0}%
-    \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
-    \Gin@defaultbp\Gin@urx{\wd\gincltex@box}%
-    \Gin@defaultbp\Gin@ury{\ht\gincltex@box}%
-%    \end{macrocode}
 % The |height|, |totalheight| and |width| options are already processed and the final requested height and width
 % to which the `graphic' should be scaled to are provided. The internal form of the \Macro\resizebox macro is used for
 % this.
@@ -272,31 +263,6 @@
 \@ifundefined{gincltex@bbout}{\newwrite\gincltex@bbout}{}
 %    \end{macrocode}
 %
-% \begin{macro}{\Gread@tex}
-%    \begin{macrocode}
-\def\Gread@tex#1{%
-  \IfFileExists{#1.bb}%
-    {%
-      \edef\Gread@BBox{\@percentchar\@percentchar HiResBoundingBox}%
-      \Gread@eps{#1.bb}%
-    }%
-    {%
-      \sbox\gincltex@box{{\gincltex@input{#1}}}%
-      \def\Gin@llx{0}%
-      \Gin@defaultbp\Gin@lly{-\dp\gincltex@box}%
-      \Gin@defaultbp\Gin@urx{\wd\gincltex@box}%
-      \Gin@defaultbp\Gin@ury{\ht\gincltex@box}%
-      \expandafter\xdef\csname gincltex@bb@#1\endcsname
-        {{\Gin@llx}{\Gin@lly}{\Gin@urx}{\Gin@ury}}%
-      \if@filesw
-        \immediate\write\@auxout{\string\gincltex@bb{#1}%
-            \csname gincltex@bb@#1\endcsname}%
-      \fi
-    }%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\gincltex@bb}
 % Write the bounding box information to the |.tex.bb| file. The hi-resolution version is used to be more accurate.
 % The code to write the normal version is disabled for now because it is unneeded and requires some non-trivial |pgfmath| calls.
@@ -309,12 +275,6 @@
 \def\gincltex@@bb#1#2#3#4#5{%
     \begingroup
     \immediate\openout\gincltex@bbout=#1.bb\relax
-    %\pgfmathtruncatemacro\llx{ceil(#2)}%
-    %\pgfmathtruncatemacro\lly{ceil(#3)}%
-    %\pgfmathtruncatemacro\urx{ceil(#4)}%
-    %\pgfmathtruncatemacro\ury{ceil(#5)}%
-    %\immediate\write\gincltex@bbout{\@percentchar
-    %   \@percentchar BoundingBox: \llx\space\lly\space\urx\space\ury}%
     \immediate\write\gincltex@bbout{\@percentchar
         \@percentchar HiResBoundingBox: #2 #3 #4 #5}%
     \immediate\closeout\gincltex@bbout
