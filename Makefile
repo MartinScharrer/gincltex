@@ -1,3 +1,22 @@
+CONTRIBUTION  = gincltex
+VERSION       = v0.3
+NAME          = Martin Scharrer
+EMAIL         = martin@scharrer-online.de
+DIRECTORY     = /macros/latex/contrib/gincltex
+DONOTANNOUNCE = 0
+LICENSE       = free
+FREEVERSION   = lppl
+FILE          = gincltex.tar.gz
+export CONTRIBUTION VERSION NAME EMAIL SUMMARY DIRECTORY DONOTANNOUNCE ANNOUNCE NOTES LICENSE FREEVERSION FILE
+
+ctanify: ${FILE}
+
+${FILE}: ${CONTRIBUTION}.dtx ${CONTRIBUTION}.ins README
+	ctanify --pkgname ${CONTRIBUTION} $^
+
+upload: ${FILE}
+	ctanupload -p
+
 TEXMF=${HOME}/texmf
 INSTALLDIR=${TEXMF}/tex/latex/gincltex
 DOCINSTALLDIR=${TEXMF}/doc/latex/gincltex
