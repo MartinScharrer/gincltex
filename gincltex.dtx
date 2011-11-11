@@ -232,7 +232,7 @@
 % this.
 %    \begin{macrocode}
     \resizebox*{\Gin@req@width}{\Gin@req@height}{%
-        \ifGin@clip\expandafter\clipbox\else\expandafter\clipbox\fi*{{\Gin@llx} {\Gin@lly} {\Gin@urx} {\Gin@ury}}{\usebox\gincltex@box}%
+        \ifGin@clip\expandafter\clipbox\else\expandafter\trimbox\fi*{{\Gin@llx} {\Gin@lly} {\Gin@urx} {\Gin@ury}}{\usebox\gincltex@box}%
     }%
     \endgroup
 }
