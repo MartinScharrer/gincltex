@@ -1,0 +1,197 @@
+%    \begin{macrocode}
+%<!COPYRIGHT>
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{gincltex}[%
+%<!DATE>
+%<!VERSION>
+%<*DRIVER>
+    2099/01/01 develop
+%</DRIVER>
+    Include external LaTeX files like graphics]
+%    \end{macrocode}
+%
+% \subsection{Package Option}
+% At the moment the key=value format is simply hard coded.
+%    \begin{macrocode}
+\newif\if@gincltex@bbfile
+\DeclareOption{bb=file}{\@gincltex@bbfiletrue}
+\DeclareOption{bb=aux}{\@gincltex@bbfilefalse}
+\DeclareOption{draft}{\PassOptionsToPackage{draft}{graphicx}}
+\DeclareOption{draft=true}{\PassOptionsToPackage{draft}{graphix}}
+\DeclareOption{draft=false}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final=true}{\PassOptionsToPackage{final}{graphicx}}
+\DeclareOption{final=false}{\PassOptionsToPackage{draft}{graphicx}}
+\DeclareOption*{\PassOptionsToPackage\CurrentOption{adjustbox}}
+\ProcessOptions*\relax
+%    \end{macrocode}
+%
+% \subsection{Requirements}
+% The \pkg{graphicx} package is required.
+% The \pkg{pgf} package is required for the graphic manipulations.
+%    \begin{macrocode}
+\RequirePackage{adjustbox}
+%    \end{macrocode}
+%
+% \subsection{Graphics Rule Macros}
+% The following macro implement a \emph{graphics rule} for \LaTeX{} source code files.
+%
+% \begin{macro}{\Gin@rule@.tex}
+% This macro declares the graphics rule to the \pkg{graphicx} package.
+%    \begin{macrocode}
+\DeclareGraphicsRule{.tex}{tex}{.tex}{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\gincltex@box}
+% A savebox required to transfer material from the `read' macro to the `include' macro.
+% Note that |\@tempboxa| is not used here because it might be used otherwise between the
+% two macros.
+%    \begin{macrocode}
+\newsavebox\gincltex@box
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\gincltex@boxfile}
+% Macro to box the \LaTeX{} source file.
+% Because \Macro\includegraphics can be used inside this file certain internal \pkg{graphicx} macros
+% must be reset to there default value.
+% The argument is expanded first because it could include |\Gin@ext|.
+% The content is stored with zero depth to achieve the same result as with included graphics.
+%    \begin{macrocode}
+\def\gincltex@boxfile#1{%
+    \sbox\gincltex@box{{%
+        \hbox{\vbox{%
+            \hbox{%
+                \edef\@tempa{{#1}}%
+                \let\Gin@ext\relax
+                \expandafter\input\@tempa
+            }%
+            \vskip\z@
+        }}%
+    }}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\Ginclude@tex}
+% This driver macro is called from the standard \Macro\includegraphics macro to include the \LaTeX{} source file.
+% Some \Macro\includegraphics options like |angle| are handled by wrapping this macro in the appropriate
+% \pkg{graphicx} macro like \Macro\rotatebox, but others must be handled here.
+%    \begin{macrocode}
+\def\Ginclude@tex#1{%
+    \begingroup
+%    \end{macrocode}
+% The content of the source file might have been already saved into the |\gincltex@box| by the |\Gread@tex| macro.
+% If not it is saved here.
+%    \begin{macrocode}
+    \ifvoid\gincltex@box
+        \gincltex@boxfile{#1}%
+    \fi
+%    \end{macrocode}
+% The |height|, |totalheight| and |width| options are already processed and the final requested height and width
+% to which the `graphic' should be scaled to are provided. The internal form of the \Macro\resizebox macro is used for
+% this.
+%    \begin{macrocode}
+    \resizebox*{\Gin@req@width}{\Gin@req@height}{%
+        \ifGin@clip\expandafter\clipbox\else\expandafter\trimbox\fi*{{\Gin@llx} {\Gin@lly} {\Gin@urx} {\Gin@ury}}{\usebox\gincltex@box}%
+    }%
+    \endgroup
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% The |\Gread@tex| macro is defined in two different ways depending how the bounding box information is preserved.
+% This information is required to support the \opt{draft} option of the \pkg{graphicx} package.
+%    \begin{macrocode}
+\if@gincltex@bbfile
+%    \end{macrocode}
+% Use a |.tex.bb| file to store the bounding box information. The standardised EPS format is used here, so that the
+% |\Gread@eps| macro can be used.
+%
+% An output register is required to write the |.tex.bb| files. Advanced users are allowed to predefine it manually
+% in order to save a write register. Note that the writing is done inside the |.aux| file, therefore the |\@mainaux|
+% handle could be used here, because it is closed while reading the |.aux| file.
+%    \begin{macrocode}
+\@ifundefined{gincltex@bbout}{\newwrite\gincltex@bbout}{}
+%    \end{macrocode}
+%
+% \begin{macro}{\gincltex@bb}
+% Write the bounding box information to the |.tex.bb| file. The hi-resolution version is used to be more accurate.
+% The code to write the normal version is disabled for now because it is unneeded and requires some non-trivial |pgfmath| calls.
+%
+% Because this macro is executed inside the |.aux| file, which is read before the begin AND at the end of the document, the macro
+% is defined as a no-op first two avoid unnecessary double execution.
+%    \begin{macrocode}
+\def\gincltex@bb#1#2#3#4#5{}
+\AtBeginDocument{\let\gincltex@bb\gincltex@@bb}
+\def\gincltex@@bb#1#2#3#4#5{%
+    \begingroup
+    \immediate\openout\gincltex@bbout=#1.bb\relax
+    \immediate\write\gincltex@bbout{\@percentchar
+        \@percentchar HiResBoundingBox: #2 #3 #4 #5}%
+    \immediate\closeout\gincltex@bbout
+    \endgroup
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% Storing the bounding box information in the |.aux| file.
+%    \begin{macrocode}
+\else
+%    \end{macrocode}
+%
+% \begin{macro}{\Gread@tex@setbb}
+% Auxiliary  macro to set the bounding box macros.
+%    \begin{macrocode}
+\def\Gread@tex@setbb#1#2#3#4{%
+    \def\Gin@llx{#1}%
+    \def\Gin@lly{#2}%
+    \def\Gin@urx{#3}%
+    \def\Gin@ury{#4}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\Gread@tex}
+% Read the bounding box information. The only way to do this is to actually typeset the source file into a box.
+% The box is then reused in the |\Ginclude@tex| macro, so there is no overhead.
+% The bounding box information is written into the |.aux| file to avoid processing the source file in \opt{draft} mode.
+% However if the corresponding macro is not define yet (e.g.\ \opt{draft} run without |.aux| file) the file must be
+% read anyway.
+%    \begin{macrocode}
+\def\Gread@tex#1{%
+    \ifcase0\ifGin@draft\@ifundefined{gincltex@bb@#1}{0}{1}\fi\relax
+        \gincltex@boxfile{#1}%
+        \def\Gin@llx{0}%
+        \let\Gin@llx\Gin@lly
+        \Gin@defaultbp\Gin@urx{\wd\gincltex@box}%
+        \Gin@defaultbp\Gin@ury{\ht\gincltex@box}%
+        \expandafter\xdef\csname gincltex@bb@#1\endcsname
+            {{\Gin@llx}{\Gin@lly}{\Gin@urx}{\Gin@ury}}%
+    \else
+        \expandafter\expandafter\expandafter\Gread@tex@setbb
+            \csname gincltex@bb@#1\endcsname
+        \setbox\gincltex@box=\box\voidb@x
+    \fi
+    \if@filesw
+        \immediate\write\@auxout{\string\gincltex@bb{#1}%
+            \csname gincltex@bb@#1\endcsname}%
+    \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\gincltex@bb}
+% Simply define the corresponding bounding box macro.
+%    \begin{macrocode}
+\def\gincltex@bb#1#2#3#4#5{%
+    \global\@namedef{gincltex@bb@#1}{{#2}{#3}{#4}{#5}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\fi
+%    \end{macrocode}
+%
