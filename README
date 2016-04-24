@@ -1,5 +1,5 @@
 The gincltex Package
-Copyright (C) 2011 -- Martin Scharrer <martin@scharrer-online.de>
+Copyright (C) 2011-2016 -- Martin Scharrer <martin@scharrer-online.de>
 
 This small package builds on the standard LaTeX packages graphic
 and/or graphicx and allows external LaTeX source files to be included like
