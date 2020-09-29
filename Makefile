@@ -1,6 +1,6 @@
 CONTRIBUTION  = gincltex
 NAME          = Martin Scharrer
-EMAIL         = martin@scharrer-scharrer.me
+EMAIL         = martin@scharrer-online.de
 DIRECTORY     = /macros/latex/contrib/${CONTRIBUTION}
 LICENSE       = free
 FREEVERSION   = lppl
